@@ -63,7 +63,7 @@ public class newCalc {
 
         displayPanel.setLayout(new BorderLayout());
         displayPanel.add(displayLabel);
-        frame.add(displayPanel, BorderLayout.NORTH);
+        frame.add(displayPanel, BorderLayout.NORTH); //DISPLAYS DISPLAYPANEL
 
         buttonsPanel.setLayout(new GridLayout(5, 4, 10, 10));
         buttonsPanel.setBackground(backgroundCalc);
@@ -87,6 +87,32 @@ public class newCalc {
                 button.setForeground(text);
            }
            buttonsPanel.add(button);
+
+           // do something buttons! 
+           button.addActionListener(new ActionListener() { 
+                public void actionPerformed(ActionEvent e){ //action performed will be a mouse click, E refers to the action
+                    JButton button = (JButton) e.getSource(); //we nbeed to get the button that we clicked  E = action event, source is where it came from s oevent is a jButton
+                    // next we need to identity that is clicked on, cold be operators, or numbers;
+                    String buttonValue = button.getText();
+                    if (Arrays.asList(right).contains(buttonValue)){
+
+                    }
+                    else if (Arrays.asList(top).contains(buttonValue)){
+
+                    }
+                    else { // nubmers or .
+                        if (buttonValue == "."){
+
+                        } else if ("0123456789".contains(buttonValue)){
+                            if (displayLabel.getText() == "0"){
+                                displayLabel.setText(buttonValue); 
+                            } else {
+                                displayLabel.setText(displayLabel.getText() + buttonValue);
+                            }
+                        }
+                    }
+                }
+           });
         }
     }
 }

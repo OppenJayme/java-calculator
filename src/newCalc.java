@@ -18,7 +18,7 @@ public class newCalc {
     Color numPad = new Color(68,68,78); //
 
     String[] buttons = {
-        "AC", "±", "%", "÷",
+        "AC", "+/-", "%", "÷",
         "7", "8", "9", "x",
         "4", "5", "6", "-",
         "1", "2", "3", "+",
@@ -29,7 +29,7 @@ public class newCalc {
         "÷", "x", "-", "+", "="
     };
     String[] top = {
-        "AC", "±", "%"
+        "AC", "+/-", "%"
     };
 
 
@@ -43,10 +43,12 @@ public class newCalc {
     JPanel displayPanel = new JPanel(); // to hold buttons in a panel
     JPanel buttonsPanel = new JPanel(); // to hold buttons in a panel
 
-
+    // A AND B WILL REPRESENT THE 2 NUMBERS!
+    String A = "0";
+    String operator = null;
+    String B = null;
     
     void Calculator(){
-
         frame.setVisible(true); // so we can see the frame;
         frame.setSize(windowWidth, windowHeight); // height and width
         frame.setLocationRelativeTo(null); // Positions the JFrame relative to the specified component. If null, it centers the frame on the screeen.
@@ -70,8 +72,8 @@ public class newCalc {
         frame.add(buttonsPanel);
 
         for (int i = 0; i < buttons.length; i++) {
-           JButton button = new JButton();
-           String buttonValue = buttons[i];
+           JButton button = new JButton(); // new button
+           String buttonValue = buttons[i]; // values of each buttons from the string which contains operators and digits.
            button.setFont(new Font("Arial", Font.PLAIN, 24));
            button.setText(buttonValue);
            button.setFocusable(false);
@@ -92,27 +94,80 @@ public class newCalc {
            button.addActionListener(new ActionListener() { 
                 public void actionPerformed(ActionEvent e){ //action performed will be a mouse click, E refers to the action
                     JButton button = (JButton) e.getSource(); //we nbeed to get the button that we clicked  E = action event, source is where it came from s oevent is a jButton
-                    // next we need to identity that is clicked on, cold be operators, or numbers;
+                    // next we need to identity that is clicked on, could be operators, or numbers;
                     String buttonValue = button.getText();
                     if (Arrays.asList(right).contains(buttonValue)){
+                        if (buttonValue == "="){
+                            if (A != null){
+                                B = displayLabel.getText();
+                                double numA = Double.parseDouble(A);
+                                double numB = Double.parseDouble(B);
 
+                                double result = 0;
+                                switch (operator) {
+                                    case "+": result = numA + numB; break;
+                                    case "-": result = numA - numB; break;
+                                    case "x": result = numA * numB; break;
+                                    case "÷": result = numA / numB; break;
+                                }
+                                displayLabel.setText(removeZeroDecimal(result));
+                                clearAll();
+                               
+                            }
+                        } else if ("+-x÷".contains(buttonValue)){
+                            if (operator == null){
+                                A = displayLabel.getText();
+                                displayLabel.setText("0");
+                                B = "0";
+                            }
+                            operator = buttonValue; // checks for null because they can check operator twice, so if we check null we dont want them to press it twice/appear twice;
+                            // basically it updates the operator everytime user presses an oeprator and changes into that operator
+                        }
                     }
                     else if (Arrays.asList(top).contains(buttonValue)){
-
+                        if (buttonValue == "AC"){   
+                            clearAll();
+                            displayLabel.setText("0");
+                        }
+                        else if (buttonValue == "+/-"){
+                            double numDisplay = Double.parseDouble(displayLabel.getText());
+                            numDisplay *= -1;
+                            displayLabel.setText(removeZeroDecimal(numDisplay));
+                        }
+                        else if (buttonValue == "%"){
+                            double numDisplay = Double.parseDouble(displayLabel.getText());
+                            numDisplay /= 100;
+                            displayLabel.setText(removeZeroDecimal(numDisplay));
+                        }
                     }
                     else { // nubmers or .
                         if (buttonValue == "."){
+                            if (!displayLabel.getText().contains(buttonValue)){
+                                displayLabel.setText(displayLabel.getText() + buttonValue); // can add numbers after .
+                            }
 
                         } else if ("0123456789".contains(buttonValue)){
                             if (displayLabel.getText() == "0"){
                                 displayLabel.setText(buttonValue); 
                             } else {
-                                displayLabel.setText(displayLabel.getText() + buttonValue);
+                                displayLabel.setText(displayLabel.getText() + buttonValue); //can add numbers after 
                             }
                         }
                     }
                 }
            });
         }
+    }
+    void clearAll(){
+        A = "0";
+        operator = null;
+        B = "0";
+    }
+    
+    String removeZeroDecimal(double numDisplay){
+        if (numDisplay % 1 == 0){
+            return Integer.toString((int)numDisplay);
+        }
+        return Double.toString(numDisplay);
     }
 }
